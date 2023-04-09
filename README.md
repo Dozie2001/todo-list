@@ -14,6 +14,7 @@ This is a simple to do list app made with the Flask Framework
   3. Then run the command:
   ```bash
  $ .\env\Scripts\activate\
+ ```
    4. Then install the dependencies:
  ```bash
  $ (env) pip3 install -r requirments.txt
