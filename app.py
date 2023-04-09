@@ -1,4 +1,3 @@
-
 """ Web Server of my todo list"""
 from flask import Flask, render_template
 
