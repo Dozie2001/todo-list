@@ -1,5 +1,5 @@
 """ Web Server of my todo list"""
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Dozzy2001...@local
 db = SQLAlchemy(app)
 
 
-class TODO(db.Model):
+class Todo(db.Model):
     """A class that serves as a model for a todo database"""
     id = db.Column(db.Integer, primary_key='True')
     content = db.Column(db.String(200), nullable=False)
@@ -18,9 +18,22 @@ class TODO(db.Model):
 
     def __repr__(self):
         return '<Task %r>' % self.id
-@app.route('/')
+with app.app_context():
+    db.create_all()
+@app.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template("index.html")
+    if request.method == 'POST':
+        task_content = request.form['content']
+        new_task = Todo(content=task_content)
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+            return redirect
+        except:
+            return 'There was an issue adding your task'
+    else:
+        tasks = Todo.query.order_by(Todo.date_created).all()
+        return render_template("index.html", tasks=tasks)
 
 
 if __name__ == '__main__':
